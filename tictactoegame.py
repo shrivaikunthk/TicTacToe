@@ -3,7 +3,10 @@ import sys
 
 board=[i for i in range(0,9)]
 player, computer = '',''
-
+total_rounds = 3
+round_number = 1
+player_score =0
+computer_score = 0
 # Corners, Center and Others, respectively
 moves=((1,7,3,9),(5,),(2,4,6,8))
 # Winner combinations
@@ -11,6 +14,17 @@ winners=((0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6))
 # Table
 tab=range(1,10)
 
+def print_score():
+    if (player_score > computer_score):
+        print ("Player won " + str(player_score) + " rounds!!")
+    elif (player_score< computer_score):
+        print ("Computer won " + str(computer_score) + " rounds!!")
+    elif (player_score==0 & computer_score==0):
+        print("It is a tie :(")
+def board_numbers():
+    
+    for i in range(round_number):
+        print_board()
 def print_board():
     x=1
     for i in board:
@@ -22,7 +36,8 @@ def print_board():
         if i in ('X','O'): char=i;
         x+=1
         print(char,end=end)
-ls        
+    rounds()
+    
 def select_char():
     chars=('X','O')
     if random.randint(0,1) == 0:
@@ -86,24 +101,29 @@ def computer_move():
 def space_exist():
     return board.count('X') + board.count('O') != 9
 
-player, computer = select_char()
-print('Player is [%s] and computer is [%s]' % (player, computer))
-result='%%% Deuce ! %%%'
-while space_exist():
-    print_board()
-    print('# Make your move ! [1-9] : ', end='')
-    move = int(input())
-    moved, won = make_move(board, player, move)
-    if not moved:
-        print(' >> Invalid number ! Try again !')
-        continue
+def rounds():
+    while space_exist():
+        print_board()
+        player , computer = select_char()
+        print('# Make your move ! [1-9] : ', end='')
+        move = int(input())
+        moved, won = make_move(board, player, move)
+        if not moved:
+            print(' >> Invalid number ! Try again !')
+            continue
     #
-    if won:
-        result='*** Congratulations ! You won ! ***'
-        break
-    elif computer_move()[1]:
-        result='=== You lose ! =='
-        break;
+        if won:
+            result='*** Congratulations ! You won ! ***'
+            player_score+=1
+            break
+        elif computer_move()[1]:
+            result='=== You lose ! =='
+            computer_score+=1
+            break;
+        elif not space_exist  :
+            result = " Deuce!"
+            computer_score=computer_score
+            player_score=player_score
 
-print_board()
-print(result)
+board_numbers()
+print_score()
